@@ -15,8 +15,8 @@ public class Node {
         this.units = units;
     }
 
-    public void produceUnits(int quantity) {
-        this.units += quantity;
+    public void produceUnits(int number) {
+        units += number;
     }
 
     public List<Node> getFriends() {
@@ -36,5 +36,24 @@ public class Node {
 
     public int getUnits() {
         return this.units;
+    }
+
+    public void give(Node node, int number) {
+        if (units < number) {
+            String message = toString() + " tried to give " + number + " units to "
+                    + node.toString() + " but had only " + units + " units.\n";
+            throw new NotEnoughUnitsException(message);
+        }
+        units -= number;
+        node.units += number;
+    }
+    public void take(Node node, int number) {
+        if (node.units < number) {
+            String message = toString() + " tried to take " + number + " units from "
+                    + node.toString() + " but " + node.toString() + " had only " + units + " units.\n";
+            throw new NotEnoughUnitsException(message);
+        }
+        node.units -= number;
+        units += number;
     }
 }

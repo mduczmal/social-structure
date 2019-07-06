@@ -76,4 +76,46 @@ class NodeTest {
         assertEquals(341261645, node.getUnits());
 
     }
+
+    @Test
+    void giveTest() {
+        Node rich = new Node(2300);
+        Node poor = new Node(20);
+
+        rich.give(poor, 150);
+
+        assertEquals(2150, rich.getUnits());
+        assertEquals(170, poor.getUnits());
+    }
+
+    @Test
+    void takeTest() {
+        Node victim = new Node(500);
+        Node robber = new Node();
+
+        robber.take(victim, 400);
+
+        assertEquals(400, robber.getUnits());
+        assertEquals(100, victim.getUnits());
+    }
+
+    @Test
+    void giveTooMuchTest() {
+        Node poor = new Node(15);
+        Node poorer = new Node(2);
+
+        assertThrows(NotEnoughUnitsException.class, () -> poor.give(poorer, 100));
+        assertEquals(2, poorer.getUnits());
+        assertEquals(15, poor.getUnits());
+    }
+
+    @Test
+    void takeTooMuchTest() {
+        Node victim = new Node(3000);
+        Node robber = new Node();
+
+        assertThrows(NotEnoughUnitsException.class, () -> robber.take(victim, 5000));
+        assertEquals(3000, victim.getUnits());
+        assertEquals(0, robber.getUnits());
+    }
 }
