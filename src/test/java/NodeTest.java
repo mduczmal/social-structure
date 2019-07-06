@@ -56,4 +56,24 @@ class NodeTest {
         }
         assertEquals(zerosFriends, nodes.get(0).getFriends());
     }
+
+    @Test
+    void zeroUnitsAfterConstructionTest() {
+        Node node = new Node();
+        assertEquals(0, node.getUnits());
+    }
+
+    @Test
+    void produceUnitsTest() {
+        Node node = new Node();
+        node.produceUnits(5);
+        assertEquals(5, node.getUnits());
+    }
+
+    @Test
+    void constructWithUnitsTest() {
+        Node node = new Node(341261645);
+        assertEquals(341261645, node.getUnits());
+
+    }
 }
