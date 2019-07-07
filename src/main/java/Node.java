@@ -3,16 +3,24 @@ import java.util.List;
 
 public class Node {
     private List<Node> friends;
+    private UtilityFunction utilityFunction;
     private int units;
+    private final UtilityFunction defaultUtilityFunction = (Node node, SocialEnvironment environment) -> units;
 
     public Node() {
-        this.friends = new ArrayList<>();
-        this.units = 0;
+        this(0, null);
+        this.utilityFunction = defaultUtilityFunction;
     }
 
     public Node(int units) {
-        this();
+        this(units, null);
+        this.utilityFunction = defaultUtilityFunction;
+    }
+
+    public Node(int units, UtilityFunction utilityFunction) {
+        this.friends = new ArrayList<>();
         this.units = units;
+        this.utilityFunction = utilityFunction;
     }
 
     public void produceUnits(int number) {
@@ -56,4 +64,9 @@ public class Node {
         node.units -= number;
         units += number;
     }
+
+    public int computeUtility(SocialEnvironment environment) {
+        return utilityFunction.compute(this, environment);
+    }
+
 }
