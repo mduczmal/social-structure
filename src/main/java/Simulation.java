@@ -1,0 +1,3 @@
+interface Simulation {
+    void run();
+}

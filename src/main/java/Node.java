@@ -17,6 +17,10 @@ public class Node {
         this.utilityFunction = defaultUtilityFunction;
     }
 
+    public Node(UtilityFunction utilityFunction) {
+        this(0, utilityFunction);
+    }
+
     public Node(int units, UtilityFunction utilityFunction) {
         this.friends = new ArrayList<>();
         this.units = units;
