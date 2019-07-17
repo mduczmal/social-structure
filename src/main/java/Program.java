@@ -24,8 +24,10 @@ public class Program {
 
         final ToIntFunction<Node> calculateLivingCosts = citizen -> (int)(0.1*initialUnits);
 
-        return new SocietySimulation(10, 50, citizenSupplier, citizenConnector,
-                calculateProductivity, calculateEffort, calculatePersonalIncomeTax, calculateLivingCosts);
+        return new SocietySimulation.Builder(10, 50).supplier(citizenSupplier)
+                .connector(citizenConnector).productivity(calculateProductivity).effort(calculateEffort)
+                .personalIncomeTax(calculatePersonalIncomeTax).livingCosts(calculateLivingCosts)
+                .build();
     }
 
     public static void main(String[] args) {

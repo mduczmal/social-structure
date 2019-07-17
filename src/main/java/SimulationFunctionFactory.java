@@ -7,6 +7,9 @@ import java.util.function.ToIntFunction;
 
 class SimulationFunctionFactory {
 
+    //Suppress default constructor for noninstantiability
+    private SimulationFunctionFactory() {}
+
     static ToIntFunction<Node> getLogProductivityFunction(int base, double multiplier){
         return citizen -> (int) Math.round(multiplier * Math.log(citizen.getUnits())/Math.log(base));
     }
@@ -23,7 +26,7 @@ class SimulationFunctionFactory {
         //taxRates should contain one more entry than incomeLevels - for incomes above all incomeLevels
         if (incomeLevels.size()+1 != taxRates.size()) {
             String errorMessage = "Please provide list of tax rates one element longer" +
-                    "than list of income levels (for incomes greater than last level).\n";
+                    "than list of income levels (last tax rate is for incomes greater than last level).\n";
             throw new IllegalArgumentException(errorMessage);
         }
         incomeLevels.add(Integer.MAX_VALUE);

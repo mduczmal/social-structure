@@ -17,6 +17,7 @@ public class Node {
         this.utilityFunction = defaultUtilityFunction;
     }
 
+
     public Node(UtilityFunction utilityFunction) {
         this(0, utilityFunction);
     }
@@ -71,6 +72,15 @@ public class Node {
 
     public int computeUtility(SocialEnvironment environment) {
         return utilityFunction.compute(this, environment);
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "friends=" + friends +
+                ", utilityFunction=" + utilityFunction +
+                ", units=" + units +
+                '}';
     }
 
 }

@@ -3,9 +3,9 @@ import java.util.List;
 import java.util.function.*;
 
 public class SocietySimulation implements Simulation {
+
     private int rounds;
     private List<Node> citizens;
-    private int citizensNumber;
     private ToIntFunction<Node> calculateLivingCosts;
     private ToIntFunction<Node> calculateProductivity;
     private IntUnaryOperator calculatePersonalIncomeTax;
@@ -13,24 +13,69 @@ public class SocietySimulation implements Simulation {
     private Consumer<List<Node>> citizenConnector;
     private Supplier<Node> citizenSupplier;
 
-    SocietySimulation(int rounds, int citizensNumber, Supplier<Node> citizenSupplier,
-                      Consumer<List<Node>> citizenConnector, ToIntFunction<Node> calculateProductivity,
-                      ToDoubleBiFunction<Node, Integer> calculateEffort, IntUnaryOperator calculatePersonalIncomeTax,
-                      ToIntFunction<Node> calculateLivingCosts) {
-        this.rounds = rounds;
-        this.citizensNumber = citizensNumber;
-        this.citizenSupplier = citizenSupplier;
-        this.citizenConnector = citizenConnector;
-        this.calculateLivingCosts = calculateLivingCosts;
-        this.calculateEffort = calculateEffort;
-        this.calculateProductivity = calculateProductivity;
-        this.calculatePersonalIncomeTax = calculatePersonalIncomeTax;
-        citizens = new ArrayList<>();
-        for (int i = 0; i < this.citizensNumber; i++) {
-            Node node = this.citizenSupplier.get();
-            citizens.add(node);
-            this.citizenConnector.accept(citizens);
+    private SocietySimulation(Builder builder) {
+        rounds = builder.rounds;
+        citizens = builder.citizens;
+        citizenSupplier = builder.supplier;
+        citizenConnector = builder.connector;
+        calculateLivingCosts = builder.livingCosts;
+        calculateEffort = builder.effort;
+        calculateProductivity = builder.productivity;
+        calculatePersonalIncomeTax = builder.personalIncomeTax;
+    }
+
+    public static class Builder {
+        private final int rounds;
+        private final int citizensNumber;
+        private List<Node> citizens;
+
+        private Supplier<Node> supplier = Node::new;
+        private Consumer<List<Node>> connector = citizens -> {};
+        private ToIntFunction<Node> productivity = citizen -> 0;
+        private ToDoubleBiFunction<Node, Integer> effort = (citizen, income) -> 1;
+        private IntUnaryOperator personalIncomeTax = income -> 0;
+        private ToIntFunction<Node> livingCosts = citizen -> 0;
+
+
+        public Builder(int rounds, int citizensNumber) {
+            this.rounds = rounds;
+            this.citizensNumber = citizensNumber;
         }
+        public Builder supplier(Supplier<Node> supplier) {
+            this.supplier = supplier;
+            return this;
+        }
+        public Builder connector(Consumer<List<Node>> connector) {
+            this.connector = connector;
+            return this;
+        }
+        public Builder productivity(ToIntFunction<Node> productivity) {
+            this.productivity = productivity;
+            return this;
+        }
+        public Builder effort(ToDoubleBiFunction<Node, Integer> effort) {
+            this.effort = effort;
+            return this;
+        }
+        public Builder personalIncomeTax(IntUnaryOperator personalIncomeTax) {
+            this.personalIncomeTax = personalIncomeTax;
+            return this;
+        }
+        public Builder livingCosts(ToIntFunction<Node> livingCosts) {
+            this.livingCosts = livingCosts;
+            return this;
+        }
+
+        public SocietySimulation build() {
+            citizens = new ArrayList<>();
+            for (int i = 0; i < citizensNumber; i++) {
+                Node node = supplier.get();
+                citizens.add(node);
+            }
+            connector.accept(citizens);
+            return new SocietySimulation(this);
+        }
+
     }
     private int getUnitsToProduce(Node citizen) {
         int maxUnits = calculateProductivity.applyAsInt(citizen);
@@ -42,10 +87,18 @@ public class SocietySimulation implements Simulation {
     private void step() {
         for (Node citizen : citizens) {
             int units = getUnitsToProduce(citizen);
-            int taxedUnits = units- calculatePersonalIncomeTax.applyAsInt(units);
+            int taxedUnits = units - calculatePersonalIncomeTax.applyAsInt(units);
             int livingCosts = calculateLivingCosts.applyAsInt(citizen);
             citizen.produceUnits(taxedUnits-livingCosts);
         }
+    }
+
+    public int getRounds() {
+        return rounds;
+    }
+
+    public List<Node> getCitizens() {
+        return new ArrayList<>(citizens);
     }
 
     @Override
