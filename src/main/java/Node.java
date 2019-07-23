@@ -5,18 +5,15 @@ public class Node {
     private List<Node> friends;
     private UtilityFunction utilityFunction;
     private int units;
-    private final UtilityFunction defaultUtilityFunction = (Node node, SocialEnvironment environment) -> units;
+    private static UtilityFunction defaultUtilityFunction = (Node node) -> node.units;
 
     public Node() {
-        this(0, null);
-        this.utilityFunction = defaultUtilityFunction;
+        this(0, defaultUtilityFunction);
     }
 
     public Node(int units) {
-        this(units, null);
-        this.utilityFunction = defaultUtilityFunction;
+        this(units, defaultUtilityFunction);
     }
-
 
     public Node(UtilityFunction utilityFunction) {
         this(0, utilityFunction);
@@ -70,8 +67,8 @@ public class Node {
         units += number;
     }
 
-    public int computeUtility(SocialEnvironment environment) {
-        return utilityFunction.compute(this, environment);
+    public int computeUtility() {
+        return utilityFunction.compute(this);
     }
 
     @Override

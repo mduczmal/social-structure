@@ -49,7 +49,7 @@ class SimulationFunctionFactory {
     }
 
     static UtilityFunction getLogUtilityFunction(int base, int selfMultiplier, int friendMultiplier) {
-        return (Node node, SocialEnvironment environment) -> {
+        return node -> {
             double sum = 0;
             for (Node friend : node.getFriends()) {
                 sum += Math.log(friend.getUnits())/Math.log(base);

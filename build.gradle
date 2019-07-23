@@ -10,7 +10,9 @@ repositories {
     mavenCentral()
 }
 dependencies {
+    implementation('org.hibernate:hibernate-core:5.4.3.Final')
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.0')
+    testCompile('org.mockito:mockito-core:1.+')
 }
 
 test {

@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -123,15 +124,15 @@ class NodeTest {
     void trivialUtilityFunctionTest() {
         Node node = new Node(50);
 
-        assertEquals(50, node.computeUtility(new DefaultSocialEnvironment()));
+        assertEquals(50, node.computeUtility());
 
     }
     @Test
     void simpleUtilityFunctionTest() {
-        UtilityFunction utilityFunction = (Node node, SocialEnvironment environment) -> 3*node.getUnits();
+        UtilityFunction utilityFunction = node -> 3*node.getUnits();
         Node node = new Node(27, utilityFunction);
 
-        assertEquals(81, node.computeUtility(new DefaultSocialEnvironment()));
+        assertEquals(81, node.computeUtility());
     }
 
 }
